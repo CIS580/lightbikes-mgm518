@@ -1,5 +1,10 @@
 var canvas = document.getElementById('screen');
 var ctx = canvas.getContext('2d');
+var backCanvas = document.createElement('canvas');
+backCanvas.width = canvas.width;
+backCanvas.height = canvas.height;
+var backCtx = backCanvas.getContext('2d');
+
 var speed = 1/16/1000;
 
 var x = 0;
@@ -15,6 +20,7 @@ var input = {
 window.onkeydown = function(event) {
   console.log(event);
   console.log(event.keyCode);
+  //event.preventDefault();
   switch(event.keyCode) {
     //up
     case 38:
@@ -66,13 +72,30 @@ window.onkeyup = function(event) {
   }
 }
 
-function loop() {
-  if(input.up) y -= 1;
-  if(input.down) y += 1;
-  if(input.left) x -= 1;
-  if(input.right) x += 1;
-  ctx.fillStyle = "red";
-  ctx.fillRect(x, y, 5, 5);
-  setTimeout(loop, speed);
+function loop(timestamp) {
+  if(input.up && !input.down) y -= 1;
+  if(input.down && !input.up) y += 1;
+  if(input.left && !input.right) x -= 1;
+  if(input.right && !input.left) x += 1;
+  backCtx.clearRect(0, 0, backCanvas.width, backCanvas.height);
+  //backCtx.fillStyle = "blue";
+  /*for(i = 0; i < 1000; i++) {
+    backCtx.fillRect(
+      (i * 20) % 100,
+      (i * 20) % 100,
+      10, 10 );
+  }*/
+  backCtx.fillStyle = "red";
+  backCtx.fillRect(x, y, 5, 5);
+
+  //Added this line because I noticed it was still drawing a line rather
+  // than moving the dot on the convas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  //Swap buffers
+  ctx.drawImage(backCanvas,0,0);
+
+  //setTimeout(loop, speed);
+  requestAnimationFrame(loop);
 }
-loop();
+//var timeID = setInterval(loop, speed);
+requestAnimationFrame(loop);
