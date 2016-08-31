@@ -78,6 +78,8 @@ function loop(timestamp) {
   if(input.left && !input.right) x -= 1;
   if(input.right && !input.left) x += 1;
   backCtx.clearRect(0, 0, backCanvas.width, backCanvas.height);
+  backCtx.fillStyle = 'white';
+  backCtx.fillRect(0,0,backCanvas.width, backCanvas.height);
   //backCtx.fillStyle = "blue";
   /*for(i = 0; i < 1000; i++) {
     backCtx.fillRect(
@@ -88,9 +90,6 @@ function loop(timestamp) {
   backCtx.fillStyle = "red";
   backCtx.fillRect(x, y, 5, 5);
 
-  //Added this line because I noticed it was still drawing a line rather
-  // than moving the dot on the convas
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
   //Swap buffers
   ctx.drawImage(backCanvas,0,0);
 
